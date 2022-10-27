@@ -1,0 +1,32 @@
+version: "3"
+services:
+
+  api:
+    container_name: boleimailer_api
+    tty: true
+    build: 
+      context: ./
+      dockerfile: .docker/node/Dockerfile
+      args:
+        UID: 1000
+        GID: 1000
+    volumes:
+      - "./:/var/www/html"
+    ports:
+    - "3000:3000"
+    - "9229:9229" #debug port 
+
+  pgsql: 
+    container_name: boleimailer_db
+    environment:
+      TZ: America/Argentina/Buenos_Aires
+      POSTGRES_USER: "dev"
+      POSTGRES_PASSWORD: "d3v"
+      POSTGRES_DB: "test"
+    ports:
+      - '5432:5432'
+    volumes: 
+      - .docker/postgres/db:/var/lib/postgresql/data
+    build: 
+      context: ./
+      dockerfile: .docker/postgres/Dockerfile
